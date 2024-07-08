@@ -63,9 +63,14 @@ def comprar_productos(productos, num_productos):
                     print("No hay suficiente stock del producto.")
                     break
 
-                producto["cantidad"] -=cantidad
+                producto["cantidad"] -= cantidad
                 total_productos_comprados += cantidad
                 total_precio += producto["precio"] * cantidad
+
+                # Guardar la compra en el archivo compras.txt
+                with open("compras.txt", "a") as archivo:
+                    archivo.write(f"Producto: {nombre}, Cantidad: {cantidad}, Precio total: {producto['precio'] * cantidad}\n")
+
                 break
 
         if total_productos_comprados > 6:
@@ -91,6 +96,7 @@ def control_de_inventario(productos, num_productos):
 
             if opcion == 1:
                 chequeo_de_inventario(productos, num_productos)
+                imprimir_compras()
             elif opcion == 2:
                 agregar_productos_mensuales(productos, num_productos)
             elif opcion == 3:
@@ -113,3 +119,11 @@ def agregar_productos_mensuales(productos, num_productos):
     for producto in productos:
         producto["cantidad"] += 10
     print("El producto mensual se ha agregado.")
+
+def imprimir_compras():
+    try:
+        with open("compras.txt", "r") as archivo:
+            print("\nHistorial de Compras:")
+            print(archivo.read())
+    except FileNotFoundError:
+        print("No se encontró el archivo de compras.")
